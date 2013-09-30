@@ -11,7 +11,9 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -25,17 +27,35 @@ public class Controler {
 	MongoOperations mongo;
 
     @ResponseBody
-    @RequestMapping("/pessoa")
-    public HttpEntity<PessoaJSON> greeting(
-            @RequestParam(value = "name", required = false, defaultValue = "World") String name) {
+    @RequestMapping(method = RequestMethod.GET, value="/pessoa")
+    public HttpEntity<PessoaJSON> getPessoa(
+            @RequestParam(value = "nome", required = false, defaultValue = "Caio") String nome) {
 
-    	Query searchPessoaQuery = new Query(Criteria.where("alias").is("caio.ps"));
-		Pessoa savedPessoa = mongo.findOne(searchPessoaQuery, Pessoa.class);
+    	Query pessoaQuery = new Query(Criteria.where("nome").is(nome));
+		Pessoa pessoa = mongo.findOne(pessoaQuery, Pessoa.class);
     	
-    	PessoaJSON pessoa = new PessoaJSON(savedPessoa);
-        pessoa.add(linkTo(methodOn(Controler.class).greeting(name)).withSelfRel());
+    	PessoaJSON pessoaJSON = new PessoaJSON(pessoa);
+    	pessoaJSON.add(linkTo(methodOn(Controler.class).getPessoa(nome)).withSelfRel());
+    	pessoaJSON.add(linkTo(methodOn(Controler.class).addPessoa(new Pessoa())).withRel("POST"));
 
-        return new ResponseEntity<PessoaJSON>(pessoa, HttpStatus.OK);
+        return new ResponseEntity<PessoaJSON>(pessoaJSON, HttpStatus.OK);
+        
+    }
+    
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, value="/pessoa")
+    public HttpEntity<PessoaJSON> addPessoa(@RequestBody Pessoa pessoa) {
+
+    	mongo.save(pessoa);
+    	
+    	Query pessoaQuery = new Query(Criteria.where("nome").is(pessoa.getNome()));
+		Pessoa pessoaSalva = mongo.findOne(pessoaQuery, Pessoa.class);
+    	
+    	PessoaJSON pessoaJSON = new PessoaJSON(pessoa);
+    	pessoaJSON.add(linkTo(methodOn(Controler.class).getPessoa(pessoaSalva.getNome())).withRel("GET"));
+    	pessoaJSON.add(linkTo(methodOn(Controler.class).addPessoa(pessoaSalva)).withSelfRel());
+
+        return new ResponseEntity<PessoaJSON>(pessoaJSON, HttpStatus.OK);
         
     }
     
