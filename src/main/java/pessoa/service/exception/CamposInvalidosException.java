@@ -20,4 +20,16 @@ public class CamposInvalidosException extends Exception {
 		getCamposInvalidos().add(campoEMensagem.getMensagem());
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder mensagensFormatadas = new StringBuilder();
+		
+		for (String mensagemCampoInvalido : getCamposInvalidos()) {
+			mensagensFormatadas.append(mensagemCampoInvalido);
+			mensagensFormatadas.append("\n");
+		}
+		
+		return mensagensFormatadas.toString();
+	}
+
 }

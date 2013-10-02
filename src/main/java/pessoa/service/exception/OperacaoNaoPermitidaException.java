@@ -20,5 +20,10 @@ public class OperacaoNaoPermitidaException extends Exception {
 	public void setMensagem(String mensagem) {
 		this.mensagem = mensagem;
 	}
+
+	@Override
+	public String toString() {
+		return getMensagem();
+	}
 	
 }

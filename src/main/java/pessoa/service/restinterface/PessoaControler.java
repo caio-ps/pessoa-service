@@ -108,8 +108,8 @@ public class PessoaControler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
     @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-    public Exception handleException(Exception ex) {
-        return ex;
+    public String handleException(Exception ex) {
+        return ex.toString();
     }
     
 }
