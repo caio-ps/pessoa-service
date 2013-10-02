@@ -36,14 +36,7 @@ public class PessoaServico {
 		return pessoa;
 	}
 
-	private void validaCriacao(Pessoa pessoa) throws CamposInvalidosException, OperacaoNaoPermitidaException {
-		validaCamposObrigatoriosParaCriacao(pessoa);
-		if (pessoaJaExiste(pessoa)) {
-			throw OperacaoNaoPermitidaException.PESSOA_JA_EXISTE;
-		}
-	}
-	
-	private void validaCamposObrigatoriosParaCriacao(Pessoa pessoa) throws CamposInvalidosException {
+	public void validaCamposObrigatoriosParaCriacao(Pessoa pessoa) throws CamposInvalidosException {
 		
 		final CamposInvalidosException camposInvalidos = 
 				new CamposInvalidosException();
@@ -65,6 +58,13 @@ public class PessoaServico {
 	public boolean pessoaJaExiste(Pessoa novaPessoa) throws OperacaoNaoPermitidaException {
 		Pessoa pessoaJaExistente = buscaPorEmail(novaPessoa.getEmail());
 		return pessoaJaExistente != null;
+	}
+	
+	private void validaCriacao(Pessoa pessoa) throws CamposInvalidosException, OperacaoNaoPermitidaException {
+		validaCamposObrigatoriosParaCriacao(pessoa);
+		if (pessoaJaExiste(pessoa)) {
+			throw OperacaoNaoPermitidaException.PESSOA_JA_EXISTE;
+		}
 	}
 	
 	private void verificaSeTemPermissao() throws OperacaoNaoPermitidaException {
