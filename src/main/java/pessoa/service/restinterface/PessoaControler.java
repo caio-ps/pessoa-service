@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import pessoa.model.Pessoa;
 import pessoa.service.PessoaServico;
+import pessoa.service.exception.CamposInvalidosException;
 import pessoa.service.exception.OperacaoNaoPermitidaException;
 import pessoa.service.model.ListaPessoaJSON;
 import pessoa.service.model.PessoaJSON;
@@ -55,18 +56,12 @@ public class PessoaControler {
     
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value="/pessoa")
-    public HttpEntity<PessoaJSON> criaPessoa(@RequestBody Pessoa pessoa) throws OperacaoNaoPermitidaException {
+    public HttpEntity<PessoaJSON> criaPessoa(@RequestBody Pessoa pessoa)
+    		throws OperacaoNaoPermitidaException, CamposInvalidosException {
 
     	pessoaServico.cria(pessoa);
     	return new ResponseEntity<PessoaJSON>(new PessoaJSON(pessoa), HttpStatus.OK);
     	
-    }
-    
-    @ResponseBody
-    @ExceptionHandler(OperacaoNaoPermitidaException.class)
-    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
-    public String handleException(Exception e) {
-        return "You don't have permission!!!";
     }
     
     private ListaPessoaJSON buscaTodos() throws OperacaoNaoPermitidaException {
@@ -89,17 +84,32 @@ public class PessoaControler {
     	return new PessoaJSON(pessoa);
     }
 
-    private void adicionaOperacoesPermitidas(ListaPessoaJSON listaPessoasJSON) throws OperacaoNaoPermitidaException {
-    	for (PessoaJSON pessoaJSON : listaPessoasJSON.getLista()) {
-    		adicionaOperacoesPermitidas(pessoaJSON);
-    	}
-    	
-    	listaPessoasJSON.add(linkTo(methodOn(PessoaControler.class).getPessoas()).withRel("GET"));
-    	listaPessoasJSON.add(linkTo(methodOn(PessoaControler.class).criaPessoa(null)).withRel("POST"));
+    private void adicionaOperacoesPermitidas(ListaPessoaJSON listaPessoasJSON) {
+    	try {
+    		
+			for (PessoaJSON pessoaJSON : listaPessoasJSON.getLista()) {
+				adicionaOperacoesPermitidas(pessoaJSON);
+			}
+			
+			listaPessoasJSON.add(linkTo(methodOn(PessoaControler.class).getPessoas()).withRel("GET"));
+			listaPessoasJSON.add(linkTo(methodOn(PessoaControler.class).criaPessoa(null)).withRel("POST"));
+			
+		} catch (Exception e) {
+		} 
     }
     
-    private void adicionaOperacoesPermitidas(PessoaJSON pessoaJSON) throws OperacaoNaoPermitidaException {
-    	pessoaJSON.add(linkTo(methodOn(PessoaControler.class).getPessoaPorEmail(null)).withRel("GET"));
+    private void adicionaOperacoesPermitidas(PessoaJSON pessoaJSON) {
+    	try {
+			pessoaJSON.add(linkTo(methodOn(PessoaControler.class).getPessoaPorEmail(null)).withRel("GET"));
+		} catch (Exception e) {	
+		}
+    }
+    
+    @ResponseBody
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(value = HttpStatus.METHOD_NOT_ALLOWED)
+    public Exception handleException(Exception ex) {
+        return ex;
     }
     
 }
