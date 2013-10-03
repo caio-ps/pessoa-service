@@ -1,5 +1,6 @@
 package pessoa.service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import pessoa.model.Pessoa;
 import pessoa.service.exception.CamposInvalidosException;
 import pessoa.service.exception.Mensagens;
 import pessoa.service.exception.OperacaoNaoPermitidaException;
+import pessoa.service.exception.RegistroNaoEncontradoException;
 
 @Component
 public class PessoaServico {
@@ -25,15 +27,40 @@ public class PessoaServico {
 		mongo.save(pessoa);
 	}
 	
-	public List<Pessoa> buscaTodos() throws OperacaoNaoPermitidaException {
-		List<Pessoa> pessoas = mongo.findAll(Pessoa.class);
-		return pessoas;
+	public Pessoa atualiza(Pessoa pessoa)
+			throws CamposInvalidosException, OperacaoNaoPermitidaException, RegistroNaoEncontradoException {
+		
+		verificaSeTemPermissao();
+		final Pessoa pessoaJaExistente = validaAtualizacao(pessoa);
+		final Pessoa pessoaAtualizada = preencheCamposParaAtualizar(pessoaJaExistente, pessoa);
+		mongo.save(pessoaAtualizada);
+		return buscaPorEmail(pessoaAtualizada.getEmail());
+		
 	}
 	
-	public Pessoa buscaPorEmail(String email) throws OperacaoNaoPermitidaException {
+	public List<Pessoa> buscaTodos() throws RegistroNaoEncontradoException {
+		
+		List<Pessoa> pessoas = mongo.findAll(Pessoa.class);
+		
+		if (pessoas == null || pessoas.isEmpty()) {
+			throw RegistroNaoEncontradoException.DEFAULT;
+		}
+		
+		return pessoas;
+		
+	}
+	
+	public Pessoa buscaPorEmail(String email) throws RegistroNaoEncontradoException {
+		
 		Query pessoaQuery = new Query(Criteria.where("email").is(email));
 		Pessoa pessoa = mongo.findOne(pessoaQuery, Pessoa.class);
+		
+		if (pessoa == null) {
+			throw RegistroNaoEncontradoException.DEFAULT;
+		}
+		
 		return pessoa;
+		
 	}
 
 	public void validaCamposObrigatoriosParaCriacao(Pessoa pessoa) throws CamposInvalidosException {
@@ -55,9 +82,14 @@ public class PessoaServico {
 		
 	}
 
-	public boolean pessoaJaExiste(Pessoa novaPessoa) throws OperacaoNaoPermitidaException {
-		Pessoa pessoaJaExistente = buscaPorEmail(novaPessoa.getEmail());
-		return pessoaJaExistente != null;
+	public boolean pessoaJaExiste(Pessoa novaPessoa) {
+		try {
+			buscaPorEmail(novaPessoa.getEmail());
+			return Boolean.TRUE;
+		} catch (RegistroNaoEncontradoException e) {
+			return Boolean.FALSE;
+		}
+		
 	}
 	
 	private void validaCriacao(Pessoa pessoa) throws CamposInvalidosException, OperacaoNaoPermitidaException {
@@ -65,6 +97,53 @@ public class PessoaServico {
 		if (pessoaJaExiste(pessoa)) {
 			throw OperacaoNaoPermitidaException.PESSOA_JA_EXISTE;
 		}
+	}
+	
+	private Pessoa validaAtualizacao(Pessoa pessoa) throws CamposInvalidosException, RegistroNaoEncontradoException {
+		
+		final CamposInvalidosException camposInvalidos = 
+				new CamposInvalidosException();
+		
+		if (pessoa.getEmail() == null || pessoa.getEmail().equals("")) {
+			camposInvalidos.addCampoInvalido(Mensagens.CAMPO_EMAIL_OBRIGATORIO);
+		}
+		
+		return buscaPorEmail(pessoa.getEmail());
+		
+	}
+	
+	private Pessoa preencheCamposParaAtualizar(Pessoa pessoaJaExistente, Pessoa novosCampos) {
+		
+		/*
+		 * Campos chave não podem ser apagados
+		 * TODO Se forem atualizados, deve atualizar as outras coleções também.
+		 */
+		if (novosCampos.getTenants() != null && !novosCampos.getTenants().isEmpty()) {
+			pessoaJaExistente.setTenant(novosCampos.getTenants());
+		}
+		if (novosCampos.getEmail() != null && !novosCampos.getEmail().equals("")) {
+			pessoaJaExistente.setTenant(novosCampos.getTenants());
+		}
+		
+		/*
+		 * Demais campos livre atualização 
+		 */
+		for (Field campo : Pessoa.class.getDeclaredFields()) {
+			
+			try {
+
+				if (!campo.getName().equals("tenants") && !campo.getName().equals("email")) {
+					campo.setAccessible(Boolean.TRUE);
+					campo.set(pessoaJaExistente, campo.get(novosCampos));
+				}
+				
+			} catch (Exception e) {
+			}
+			
+		}
+		
+		return pessoaJaExistente;
+		
 	}
 	
 	private void verificaSeTemPermissao() throws OperacaoNaoPermitidaException {
