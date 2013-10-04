@@ -115,14 +115,13 @@ public class PessoaServico {
 	private Pessoa preencheCamposParaAtualizar(Pessoa pessoaJaExistente, Pessoa novosCampos) {
 		
 		/*
-		 * Campos chave não podem ser apagados
+		 * E-mail não pode ser alterado, pois é a chave primária
 		 * TODO Se forem atualizados, deve atualizar as outras coleções também.
 		 */
-		if (novosCampos.getTenants() != null && !novosCampos.getTenants().isEmpty()) {
-			pessoaJaExistente.setTenant(novosCampos.getTenants());
-		}
-		if (novosCampos.getEmail() != null && !novosCampos.getEmail().equals("")) {
-			pessoaJaExistente.setTenant(novosCampos.getTenants());
+		if (novosCampos.getTenants() != null) {
+			for (Long tenant : novosCampos.getTenants()) {
+				pessoaJaExistente.addTenant(tenant);
+			}
 		}
 		
 		/*
@@ -132,7 +131,7 @@ public class PessoaServico {
 			
 			try {
 
-				if (!campo.getName().equals("tenants") && !campo.getName().equals("email")) {
+				if (!campo.getName().equalsIgnoreCase("tenants") && !campo.getName().equalsIgnoreCase("email")) {
 					campo.setAccessible(Boolean.TRUE);
 					campo.set(pessoaJaExistente, campo.get(novosCampos));
 				}
