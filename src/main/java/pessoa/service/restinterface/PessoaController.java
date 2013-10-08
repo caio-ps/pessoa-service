@@ -76,6 +76,17 @@ public class PessoaController extends AbstractController<ListaPessoaJSON, Pessoa
     	
     }
     
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.DELETE, value="/pessoa")
+    @ResponseStatus(value = HttpStatus.OK)
+    public HttpEntity<ListaPessoaJSON> excluiPessoa(@RequestBody Pessoa pessoa)
+    		throws OperacaoNaoPermitidaException, CamposInvalidosException, RegistroNaoEncontradoException {
+
+    	pessoaServico.exclui(pessoa.getEmail());
+    	return this.getPessoas();
+    	
+    }
+    
     private ListaPessoaJSON converteListaParaJson(List<Pessoa> pessoas) {
     	final ListaPessoaJSON pessoasJSON = new ListaPessoaJSON();
 
@@ -96,7 +107,6 @@ public class PessoaController extends AbstractController<ListaPessoaJSON, Pessoa
 			
 			listaPessoasJSON.add(linkTo(methodOn(PessoaController.class).getPessoas()).withRel("GET"));
 			listaPessoasJSON.add(linkTo(methodOn(PessoaController.class).criaPessoa(null)).withRel("POST"));
-			listaPessoasJSON.add(linkTo(methodOn(PessoaController.class).atualizaPessoa(null)).withRel("PUT"));
 			
 		} catch (Exception e) {
 		}
@@ -109,6 +119,8 @@ public class PessoaController extends AbstractController<ListaPessoaJSON, Pessoa
 	protected PessoaJSON adicionaLinksPermitidos(PessoaJSON pessoaJSON) {
 		try {
 			pessoaJSON.add(linkTo(methodOn(PessoaController.class).getPessoaPorEmail(null)).withRel("GET"));
+			pessoaJSON.add(linkTo(methodOn(PessoaController.class).atualizaPessoa(null)).withRel("PUT"));
+			pessoaJSON.add(linkTo(methodOn(PessoaController.class).excluiPessoa(null)).withRel("DELETE"));
 		} catch (Exception e) {	
 		}
 		

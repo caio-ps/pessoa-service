@@ -62,6 +62,15 @@ public class PessoaServico {
 		return pessoa;
 		
 	}
+	
+	public void exclui(String email) throws RegistroNaoEncontradoException, OperacaoNaoPermitidaException{
+		
+		verificaSeTemPermissao();
+		Pessoa pessoa = buscaPorEmail(email);
+		validaExclusao(pessoa);
+		mongo.remove(pessoa);
+		
+	}
 
 	public void validaCamposObrigatoriosParaCriacao(Pessoa pessoa) throws CamposInvalidosException {
 		
@@ -110,6 +119,12 @@ public class PessoaServico {
 		
 		return buscaPorEmail(pessoa.getEmail());
 		
+	}
+	
+	private void validaExclusao(Pessoa pessoa) throws OperacaoNaoPermitidaException {
+		/*
+		 * TODO Regras de negócio que impedem exclusão de pessoa.
+		 */
 	}
 	
 	private Pessoa preencheCamposParaAtualizar(Pessoa pessoaJaExistente, Pessoa novosCampos) {
