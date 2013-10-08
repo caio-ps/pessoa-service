@@ -1,4 +1,4 @@
-Camada de serviço para trabalhar com objeto Pessoa
+REST HyperMedia - Pessoa Service
 ==============
 
 Este projeto é parte de um simples sistema para trabalhar com objeto Pessoa, utilizando REST
