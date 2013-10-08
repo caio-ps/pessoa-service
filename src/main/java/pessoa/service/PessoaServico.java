@@ -116,22 +116,13 @@ public class PessoaServico {
 		
 		/*
 		 * E-mail não pode ser alterado, pois é a chave primária
-		 * TODO Se forem atualizados, deve atualizar as outras coleções também.
 		 */
-		if (novosCampos.getTenants() != null) {
-			for (Long tenant : novosCampos.getTenants()) {
-				pessoaJaExistente.addTenant(tenant);
-			}
-		}
 		
-		/*
-		 * Demais campos livre atualização 
-		 */
 		for (Field campo : Pessoa.class.getDeclaredFields()) {
 			
 			try {
 
-				if (!campo.getName().equalsIgnoreCase("tenants") && !campo.getName().equalsIgnoreCase("email")) {
+				if (!campo.getName().equalsIgnoreCase("email")) {
 					campo.setAccessible(Boolean.TRUE);
 					campo.set(pessoaJaExistente, campo.get(novosCampos));
 				}
