@@ -54,6 +54,16 @@ public class PessoaController extends AbstractController<ListaPessoaJSON, Pessoa
     }
     
     @ResponseBody
+    @RequestMapping(method = RequestMethod.GET, value="/pessoa")
+    @ResponseStatus(value = HttpStatus.OK)
+	public Pessoa validaLogin(Pessoa pessoa) throws OperacaoNaoPermitidaException, RegistroNaoEncontradoException {
+
+		final Pessoa pessoaLogada = pessoaServico.validaLogin(pessoa.getEmail(), pessoa.getSenha());
+		return pessoaLogada;
+        
+    }
+    
+    @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value="/pessoa")
     @ResponseStatus(value = HttpStatus.CREATED)
     public HttpEntity<PessoaJSON> criaPessoa(@RequestBody Pessoa pessoa)
