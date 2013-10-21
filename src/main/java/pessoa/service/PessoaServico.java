@@ -68,7 +68,7 @@ public class PessoaServico {
 		verificaSeTemPermissao();
 		Pessoa pessoa = buscaPorEmail(email);
 		validaExclusao(pessoa);
-		mongo.remove(pessoa);
+		// Chama o serviço de controle de tenants e desativa a pessoa no tenant corrente.
 		
 	}
 
@@ -122,9 +122,11 @@ public class PessoaServico {
 	}
 	
 	private void validaExclusao(Pessoa pessoa) throws OperacaoNaoPermitidaException {
+
 		/*
-		 * TODO Regras de negócio que impedem exclusão de pessoa.
+		 * Valida se pode ser desativada do tenant em questão.
 		 */
+
 	}
 	
 	private Pessoa preencheCamposParaAtualizar(Pessoa pessoaJaExistente, Pessoa novosCampos) {
@@ -132,7 +134,6 @@ public class PessoaServico {
 		/*
 		 * E-mail não pode ser alterado, pois é a chave primária
 		 */
-		
 		for (Field campo : Pessoa.class.getDeclaredFields()) {
 			
 			try {
