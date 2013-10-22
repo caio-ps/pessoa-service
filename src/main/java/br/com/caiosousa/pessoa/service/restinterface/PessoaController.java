@@ -70,7 +70,7 @@ public class PessoaController extends AbstractController<ListaPessoaJSON, Pessoa
     		throws OperacaoNaoPermitidaException, CamposInvalidosException {
 
     	pessoaServico.cria(pessoa);
-    	return new ResponseEntity<PessoaJSON>(adicionaLinksPermitidos(new PessoaJSON(pessoa)), HttpStatus.OK);
+		return new ResponseEntity<PessoaJSON>(adicionaLinksPermitidos(new PessoaJSON(pessoa)), HttpStatus.CREATED);
     	
     }
     
