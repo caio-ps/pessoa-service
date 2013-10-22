@@ -1,8 +1,9 @@
-package pessoa.service.model;
+package br.com.caiosousa.pessoa.service.model;
 
 import org.springframework.hateoas.ResourceSupport;
 
-import pessoa.model.Pessoa;
+import br.com.caiosousa.pessoa.model.Pessoa;
+
 
 public class PessoaJSON extends ResourceSupport {
 

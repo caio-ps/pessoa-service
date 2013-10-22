@@ -1,13 +1,13 @@
-package pessoa.service.restinterface;
+package br.com.caiosousa.pessoa.service.restinterface;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import pessoa.service.exception.CamposInvalidosException;
-import pessoa.service.exception.OperacaoNaoPermitidaException;
-import pessoa.service.exception.RegistroNaoEncontradoException;
+import br.com.caiosousa.exception.CamposInvalidosException;
+import br.com.caiosousa.exception.OperacaoNaoPermitidaException;
+import br.com.caiosousa.exception.RegistroNaoEncontradoException;
 
 public abstract class AbstractController<L, T> {
 

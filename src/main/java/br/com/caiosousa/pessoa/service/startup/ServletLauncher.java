@@ -1,4 +1,4 @@
-package pessoa.service.startup;
+package br.com.caiosousa.pessoa.service.startup;
 
 import org.springframework.boot.web.SpringBootServletInitializer;
 

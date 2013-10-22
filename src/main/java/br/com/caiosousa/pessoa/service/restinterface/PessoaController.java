@@ -1,4 +1,4 @@
-package pessoa.service.restinterface;
+package br.com.caiosousa.pessoa.service.restinterface;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import pessoa.model.Pessoa;
-import pessoa.service.PessoaServico;
-import pessoa.service.exception.CamposInvalidosException;
-import pessoa.service.exception.OperacaoNaoPermitidaException;
-import pessoa.service.exception.RegistroNaoEncontradoException;
-import pessoa.service.model.ListaPessoaJSON;
-import pessoa.service.model.PessoaJSON;
+import br.com.caiosousa.exception.CamposInvalidosException;
+import br.com.caiosousa.exception.OperacaoNaoPermitidaException;
+import br.com.caiosousa.exception.RegistroNaoEncontradoException;
+import br.com.caiosousa.pessoa.model.Pessoa;
+import br.com.caiosousa.pessoa.service.PessoaServico;
+import br.com.caiosousa.pessoa.service.model.ListaPessoaJSON;
+import br.com.caiosousa.pessoa.service.model.PessoaJSON;
 
 @Controller
 public class PessoaController extends AbstractController<ListaPessoaJSON, PessoaJSON> {

@@ -3,9 +3,9 @@ package pessoa.service.test;
 import org.junit.Assert;
 import org.junit.Test;
 
-import pessoa.model.Pessoa;
-import pessoa.service.PessoaServico;
-import pessoa.service.exception.CamposInvalidosException;
+import br.com.caiosousa.exception.CamposInvalidosException;
+import br.com.caiosousa.pessoa.model.Pessoa;
+import br.com.caiosousa.pessoa.service.PessoaServico;
 
 public class PessoaServicoTest {
 

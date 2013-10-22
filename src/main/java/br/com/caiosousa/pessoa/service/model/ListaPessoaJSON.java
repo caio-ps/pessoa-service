@@ -1,4 +1,4 @@
-package pessoa.service.model;
+package br.com.caiosousa.pessoa.service.model;
 
 import java.util.ArrayList;
 import java.util.List;

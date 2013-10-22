@@ -1,4 +1,4 @@
-package pessoa.service;
+package br.com.caiosousa.pessoa.service;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -9,11 +9,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
-import pessoa.model.Pessoa;
-import pessoa.service.exception.CamposInvalidosException;
-import pessoa.service.exception.Mensagens;
-import pessoa.service.exception.OperacaoNaoPermitidaException;
-import pessoa.service.exception.RegistroNaoEncontradoException;
+import br.com.caiosousa.exception.CamposInvalidosException;
+import br.com.caiosousa.exception.Mensagens;
+import br.com.caiosousa.exception.OperacaoNaoPermitidaException;
+import br.com.caiosousa.exception.RegistroNaoEncontradoException;
+import br.com.caiosousa.pessoa.model.Pessoa;
 
 @Component
 public class PessoaServico {
