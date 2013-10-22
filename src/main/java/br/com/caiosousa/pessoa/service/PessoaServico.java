@@ -95,7 +95,7 @@ public class PessoaServico {
 			camposInvalidos.addCampoInvalido(Mensagens.CAMPO_EMAIL_OBRIGATORIO);
 		}
 		
-		if (pessoa.getTenants() == null || pessoa.getTenants().isEmpty()) {
+		if (pessoa.getTenant() == null) {
 			camposInvalidos.addCampoInvalido(Mensagens.PELO_MENOS_UM_TENANT_OBRIGATORIO);
 		}
 		
@@ -145,8 +145,8 @@ public class PessoaServico {
 	
 	private Pessoa preencheCamposParaAtualizar(Pessoa pessoaJaExistente, Pessoa novosCampos) {
 		
-		/*
-		 * E-mail não pode ser alterado, pois é a chave primária
+		/*TODO: Refazer setando valores na mão
+		 * E-mail e tenant não podem ser alterados, pois é a chave primária
 		 */
 		for (Field campo : Pessoa.class.getDeclaredFields()) {
 			

@@ -17,7 +17,7 @@ public class PessoaServicoTest {
 		//Pessoa OK
 		Pessoa pessoa = new Pessoa();
 		pessoa.setEmail("teste@test.com");
-		pessoa.addTenant(1L);
+		pessoa.setTenant(1L);
 		
 		try {
 			pessoaServico.validaCamposObrigatoriosParaCriacao(pessoa);
@@ -28,7 +28,7 @@ public class PessoaServicoTest {
 		//Pessoa com email vazio
 		pessoa = new Pessoa();
 		pessoa.setEmail("");
-		pessoa.addTenant(1L);
+		pessoa.setTenant(1L);
 		
 		try {
 			pessoaServico.validaCamposObrigatoriosParaCriacao(pessoa);
