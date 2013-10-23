@@ -63,20 +63,6 @@ public class PessoaServico {
 		
 	}
 	
-	public Pessoa validaLogin(String email, String senha) throws RegistroNaoEncontradoException, OperacaoNaoPermitidaException {
-		
-		verificaSeTemPermissao();
-		Query pessoaQuery = new Query(Criteria.where("email").is(email).and("senha").is(senha));
-		Pessoa pessoa = mongo.findOne(pessoaQuery, Pessoa.class);
-		
-		if (pessoa == null) {
-			throw RegistroNaoEncontradoException.DEFAULT;
-		}
-		
-		return pessoa;
-		
-	}
-	
 	public void exclui(String email) throws RegistroNaoEncontradoException, OperacaoNaoPermitidaException{
 		
 		verificaSeTemPermissao();
